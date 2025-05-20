@@ -1,29 +1,38 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { TwitchLogo } from "@phosphor-icons/react";
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { GoogleLogoIcon, TwitchLogo } from "@phosphor-icons/react";
+import { authClient } from "@/lib/auth-client";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
-  password: z.string().min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
-})
+  password: z
+    .string()
+    .min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
+});
 
-type LoginFormValues = z.infer<typeof loginSchema>
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -31,11 +40,28 @@ export function LoginForm() {
       email: "",
       password: "",
     },
-  })
+  });
 
   async function onSubmit(formData: LoginFormValues) {
-
-
+    await authClient.signIn.email(
+      {
+        email: formData.email,
+        password: formData.password,
+        callbackURL: "/dashboard",
+      },
+      {
+        onRequest: (ctx) => {},
+        onSuccess: (ctx) => {
+          console.log(ctx);
+          console.log("LOGADO COM SUCESSO");
+          router.replace("/dashboard");
+        },
+        onError: (ctx) => {
+          console.log(ctx);
+          console.log("ERRO AO LOGAR");
+        },
+      }
+    );
   }
 
   return (
@@ -48,7 +74,12 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="seu@email.com" type="email" {...field} disabled={isLoading} />
+                <Input
+                  placeholder="seu@email.com"
+                  type="email"
+                  {...field}
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,7 +113,9 @@ export function LoginForm() {
                     ) : (
                       <Eye className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <span className="sr-only">{showPassword ? "Esconder senha" : "Mostrar senha"}</span>
+                    <span className="sr-only">
+                      {showPassword ? "Esconder senha" : "Mostrar senha"}
+                    </span>
                   </Button>
                 </div>
               </FormControl>
@@ -91,7 +124,11 @@ export function LoginForm() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -107,20 +144,31 @@ export function LoginForm() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Ou continue com</span>
+            <span className="bg-background px-2 text-muted-foreground">
+              Ou continue com
+            </span>
           </div>
         </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full bg-[#ff4656] text-white hover:bg-[#db3636] hover:text-white"
+          onClick={async () => {}}
+        >
+          <GoogleLogoIcon className="mr-2 h-4 w-4" />
+          Entrar com Google
+        </Button>
 
         <Button
           type="button"
           variant="outline"
           className="w-full bg-[#9146FF] text-white hover:bg-[#7d3bdf] hover:text-white"
-          onClick={async () => { }}
+          onClick={async () => {}}
         >
           <TwitchLogo className="mr-2 h-4 w-4" />
-          Entrar com Twitch
+          Entrar com Github
         </Button>
       </form>
     </Form>
-  )
+  );
 }
