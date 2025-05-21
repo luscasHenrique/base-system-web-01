@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
@@ -14,30 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  SUPERADMIN
+  EDITOR
+  SELLER
+  VIEWER
+}
+
 model User {
   id            String    @id
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean
-  image         String?   
-  phone         String?          
-  role          String?          
-  is_active     Boolean   @default(true) 
-  bio           String?          
-  last_login    DateTime?        
+  image         String?
+  phone         String?
+  role          Role?               
+  is_active     Boolean   @default(true)
+  bio           String?
+  last_login    DateTime?
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
 
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -45,7 +51,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 

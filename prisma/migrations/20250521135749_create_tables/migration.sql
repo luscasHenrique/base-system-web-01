@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'SUPERADMIN', 'EDITOR', 'SELLER', 'VIEWER');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -6,7 +9,7 @@ CREATE TABLE "user" (
     "emailVerified" BOOLEAN NOT NULL,
     "image" TEXT,
     "phone" TEXT,
-    "role" TEXT,
+    "role" "Role",
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "bio" TEXT,
     "last_login" TIMESTAMP(3),
