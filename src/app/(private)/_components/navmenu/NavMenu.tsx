@@ -11,6 +11,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { footerMenu, mainMenu } from "./menuData/menu";
 import { useNavMenu } from "./useNavMenu";
+import { notify } from "@/lib/notify"; // ✅ toast helper importado
 
 export function NavMenu() {
   const pathname = usePathname();
@@ -29,7 +30,15 @@ export function NavMenu() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          notify.success("Logout realizado com sucesso!");
           router.push("/");
+        },
+        onError: (ctx) => {
+          notify.error(
+            typeof ctx?.error === "string"
+              ? ctx.error
+              : "Erro ao realizar logout."
+          );
         },
       },
     });
@@ -45,7 +54,6 @@ export function NavMenu() {
           filter: "drop-shadow(0 4px 6px rgba(188, 188, 188, 0.573))",
         }}
       >
-        {/* Avatar fixo sem dados reais */}
         <div
           className={`flex items-center ${
             isCollapsed ? "justify-center" : "gap-4"
@@ -142,7 +150,6 @@ export function NavMenu() {
                   </Link>
                 )}
 
-                {/* Submenu */}
                 {submenu && (
                   <>
                     {isCollapsed && openSubmenu === label && (
