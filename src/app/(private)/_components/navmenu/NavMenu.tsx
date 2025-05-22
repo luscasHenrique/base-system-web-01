@@ -70,7 +70,7 @@ export function NavMenu() {
                 <Tooltip.Portal>
                   <Tooltip.Content
                     side="right"
-                    className="bg-black text-white px-3 py-1 rounded text-sm"
+                    className="bg-black text-white px-3 py-1 rounded text-sm z-30"
                   >
                     Usuário - exemplo@email.com
                     <br />
@@ -252,7 +252,7 @@ export function NavMenu() {
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={`absolute top-10 ${
           isCollapsed ? "left-[4.5rem]" : "left-[16.5rem]"
-        } z-50 bg-white border border-gray-200 rounded-full p-1 shadow transition-all duration-300`}
+        } z-20 bg-white border border-gray-200 rounded-full p-1 shadow transition-all duration-300`}
         aria-label={isCollapsed ? "Expandir menu" : "Colapsar menu"}
         aria-expanded={!isCollapsed}
       >

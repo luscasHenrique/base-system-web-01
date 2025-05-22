@@ -13,23 +13,23 @@ const baseConfig: ToastOptions = {
 
 export const notify = {
   success: (msg: string) =>
-    toast.success(`✅ ${msg}`, {
+    toast.success(` ${msg}`, {
       ...baseConfig,
     }),
 
   error: (msg: string) =>
-    toast.error(`❌ ${msg}`, {
+    toast.error(` ${msg}`, {
       ...baseConfig,
       autoClose: 6000,
     }),
 
   info: (msg: string) =>
-    toast.info(`ℹ️ ${msg}`, {
+    toast.info(` ${msg}`, {
       ...baseConfig,
     }),
 
   warning: (msg: string) =>
-    toast.warning(`⚠️ ${msg}`, {
+    toast.warning(` ${msg}`, {
       ...baseConfig,
     }),
 };

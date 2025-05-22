@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { notify } from "@/lib/notify";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,14 +53,14 @@ export function LoginForm() {
       },
       {
         onRequest: () => {
-          toast.info("Verificando credenciais...");
+          notify.info("Verificando credenciais...");
         },
         onSuccess: () => {
-          toast.success("Login realizado com sucesso!");
+          notify.success("Login realizado com sucesso!");
           router.replace("/dashboard");
         },
         onError: (ctx) => {
-          toast.error(
+          notify.error(
             typeof ctx?.error === "string"
               ? ctx.error
               : "Erro ao realizar login."
@@ -158,24 +158,32 @@ export function LoginForm() {
           variant="outline"
           className="w-full bg-[#ff4656] text-white hover:bg-[#db3636] hover:text-white"
           onClick={async () => {
-            toast.info("Autenticação com Google ainda não implementada");
+            try {
+              await authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/dashboard", // <- AQUI RESOLVE
+              });
+            } catch (error) {
+              console.error(error);
+              notify.error("Erro ao tentar login com Google");
+            }
           }}
         >
           <GoogleLogoIcon className="mr-2 h-4 w-4" />
           Entrar com Google
         </Button>
 
-        <Button
+        {/* <Button
           type="button"
           variant="outline"
           className="w-full bg-[#9146FF] text-white hover:bg-[#7d3bdf] hover:text-white"
           onClick={async () => {
-            toast.info("Autenticação com Github ainda não implementada");
+            notify.info("Autenticação com Github ainda não implementada");
           }}
         >
           <TwitchLogo className="mr-2 h-4 w-4" />
           Entrar com Github
-        </Button>
+        </Button> */}
       </form>
     </Form>
   );
