@@ -9,7 +9,7 @@ CREATE TABLE "user" (
     "emailVerified" BOOLEAN NOT NULL,
     "image" TEXT,
     "phone" TEXT,
-    "role" "Role",
+    "role" "Role" NOT NULL DEFAULT 'VIEWER',
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "bio" TEXT,
     "last_login" TIMESTAMP(3),

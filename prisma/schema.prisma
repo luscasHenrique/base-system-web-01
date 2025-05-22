@@ -28,7 +28,7 @@ model User {
   emailVerified Boolean
   image         String?
   phone         String?
-  role          Role?               
+  role          Role      @default(VIEWER)             
   is_active     Boolean   @default(true)
   bio           String?
   last_login    DateTime?
