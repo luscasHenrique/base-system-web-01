@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +44,7 @@ export function LoginForm() {
   });
 
   async function onSubmit(formData: LoginFormValues) {
+    setIsLoading(true);
     await authClient.signIn.email(
       {
         email: formData.email,
@@ -50,18 +52,23 @@ export function LoginForm() {
         callbackURL: "/dashboard",
       },
       {
-        onRequest: (ctx) => {},
-        onSuccess: (ctx) => {
-          console.log(ctx);
-          console.log("LOGADO COM SUCESSO");
+        onRequest: () => {
+          toast.info("Verificando credenciais...");
+        },
+        onSuccess: () => {
+          toast.success("Login realizado com sucesso!");
           router.replace("/dashboard");
         },
         onError: (ctx) => {
-          console.log(ctx);
-          console.log("ERRO AO LOGAR");
+          toast.error(
+            typeof ctx?.error === "string"
+              ? ctx.error
+              : "Erro ao realizar login."
+          );
         },
       }
     );
+    setIsLoading(false);
   }
 
   return (
@@ -124,12 +131,8 @@ export function LoginForm() {
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? (
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Entrando...
@@ -149,11 +152,14 @@ export function LoginForm() {
             </span>
           </div>
         </div>
+
         <Button
           type="button"
           variant="outline"
           className="w-full bg-[#ff4656] text-white hover:bg-[#db3636] hover:text-white"
-          onClick={async () => {}}
+          onClick={async () => {
+            toast.info("Autenticação com Google ainda não implementada");
+          }}
         >
           <GoogleLogoIcon className="mr-2 h-4 w-4" />
           Entrar com Google
@@ -163,7 +169,9 @@ export function LoginForm() {
           type="button"
           variant="outline"
           className="w-full bg-[#9146FF] text-white hover:bg-[#7d3bdf] hover:text-white"
-          onClick={async () => {}}
+          onClick={async () => {
+            toast.info("Autenticação com Github ainda não implementada");
+          }}
         >
           <TwitchLogo className="mr-2 h-4 w-4" />
           Entrar com Github

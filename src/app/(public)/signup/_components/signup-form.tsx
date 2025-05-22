@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,7 +57,8 @@ export function SignupForm() {
   });
 
   async function onSubmit(formData: SignupFormValues) {
-    const {} = await authClient.signUp.email(
+    setIsLoading(true);
+    await authClient.signUp.email(
       {
         name: formData.name,
         email: formData.email,
@@ -64,18 +66,21 @@ export function SignupForm() {
         callbackURL: "/dashboard",
       },
       {
-        onRequest: (ctx) => {},
-        onSuccess: (ctx) => {
-          console.log(ctx);
-          console.log("CONTA CRIADA COM SUCESSO");
+        onRequest: () => {
+          toast.info("Criando conta...");
+        },
+        onSuccess: () => {
+          toast.success("Conta criada com sucesso!");
           router.replace("/dashboard");
         },
         onError: (ctx) => {
-          console.log(ctx);
-          console.log("ERRO AO CRIAR CONTA");
+          toast.error(
+            typeof ctx?.error === "string" ? ctx.error : "Erro ao criar conta."
+          );
         },
       }
     );
+    setIsLoading(false);
   }
 
   return (

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { NavMenu } from "./_components/navmenu/NavMenu";
 import { Header } from "./_components/header/Header";
+import { ToastProvider } from "@/_components/providers/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function PrivateLayout({
             <main className="flex-1 overflow-auto p-6">{children}</main>
           </div>
         </div>
+        <ToastProvider />
       </body>
     </html>
   );
