@@ -12,12 +12,11 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
 
-  // ✅ AQUI ESTÁ O QUE FALTAVA
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      prompt: "select_account", // (opcional)
+      prompt: "select_account",
     },
   },
 });
