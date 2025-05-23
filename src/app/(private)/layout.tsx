@@ -1,4 +1,8 @@
 // src/app/(private)/layout.tsx
+import { auth } from "@/lib/auth"; // Importando o auth para verificar a sessão
+import { headers } from "next/headers"; // Para pegar os cabeçalhos da requisição
+import { redirect } from "next/navigation"; // Para redirecionar para outra página
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
@@ -21,11 +25,19 @@ export const metadata: Metadata = {
   description: "Layout exclusivo para rotas privadas",
 };
 
-export default function PrivateLayout({
+export default async function PrivateLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  // Verificar se o usuário está autenticado
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    // Caso não tenha sessão (usuário não autenticado), redirecionar para a página pública (login)
+    redirect("/"); // ou para qualquer outra página pública
+  }
+
   return (
     <html lang="pt-BR">
       <body
