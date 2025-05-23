@@ -14,11 +14,11 @@ import {
 } from "lucide-react";
 
 export const mainMenu: MenuItem[] = [
-  {
-    icon: Home,
-    label: "Home",
-    href: "/",
-  },
+  //   {
+  //     icon: Home,
+  //     label: "Home",
+  //     href: "/",
+  //   },
   {
     icon: ChartAreaIcon,
     label: "Dashboard",
@@ -58,6 +58,7 @@ export const mainMenu: MenuItem[] = [
     submenu: [
       { label: "Register User", href: "/register" },
       { label: "Manger Users", href: "/manager-users" },
+      { label: "Manger Profile", href: "/profile" },
     ],
   },
 ];
