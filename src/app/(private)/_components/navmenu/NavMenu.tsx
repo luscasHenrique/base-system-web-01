@@ -6,17 +6,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { footerMenu, mainMenu } from "./menuData/menu";
 import { useNavMenu } from "./useNavMenu";
-import { notify } from "@/lib/notify"; // ✅ toast helper importado
+import { notify } from "@/lib/notify";
 
 export function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
-
+  const { user, loading } = useCurrentUser();
   const {
     isCollapsed,
     setIsCollapsed,
@@ -63,7 +64,17 @@ export function NavMenu() {
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={
+                      user?.image
+                        ? String(user.image)
+                        : "https://github.com/shadcn.png"
+                    }
+                    alt={user?.name || "Avatar"}
+                  />
+                  <AvatarFallback>
+                    {(user?.name || "U").charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
               </Tooltip.Trigger>
               {isCollapsed && (
@@ -72,9 +83,13 @@ export function NavMenu() {
                     side="right"
                     className="bg-black text-white px-3 py-1 rounded text-sm z-30"
                   >
-                    Usuário - exemplo@email.com
+                    {user?.name || "Usuário"}
                     <br />
-                    <span className="text-xs text-gray-300">ADMIN</span>
+                    {user?.email || ""}
+                    <br />
+                    <span className="text-xs text-gray-300">
+                      {user?.role || ""}
+                    </span>
                   </Tooltip.Content>
                 </Tooltip.Portal>
               )}
@@ -82,9 +97,13 @@ export function NavMenu() {
           </Tooltip.Provider>
           {!isCollapsed && (
             <div>
-              <p className="text-sm font-semibold">Usuário</p>
-              <p className="text-xs text-gray-500">exemplo@email.com</p>
-              <p className="text-xs text-gray-400 uppercase">ADMIN</p>
+              <p className="text-sm font-semibold">{user?.name || "Usuário"}</p>
+              <p className="text-xs text-gray-500">
+                {user?.email || "sem-email"}
+              </p>
+              <p className="text-xs text-gray-400 uppercase">
+                {user?.role || ""}
+              </p>
             </div>
           )}
         </div>

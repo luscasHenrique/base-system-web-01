@@ -1,6 +1,6 @@
 // src/components/navmenu/useNavMenu.ts
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 export function useNavMenu() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -12,14 +12,14 @@ export function useNavMenu() {
 
   useEffect(() => {
     if (isMounted) {
-      const savedState = localStorage.getItem('navMenuCollapsed');
-      if (savedState !== null) setIsCollapsed(savedState === 'true');
+      const savedState = localStorage.getItem("navMenuCollapsed");
+      if (savedState !== null) setIsCollapsed(savedState === "true");
     }
   }, [isMounted]);
 
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem('navMenuCollapsed', String(isCollapsed));
+      localStorage.setItem("navMenuCollapsed", String(isCollapsed));
     }
   }, [isCollapsed, isMounted]);
 

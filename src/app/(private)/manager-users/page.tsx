@@ -1,5 +1,5 @@
-import ManageUsersUI from "./_components/ManageUsersUI";
+import ManagerUsersUI from "./_components/ManagerUsersUI";
 
-export default function ManageUsers() {
-  return <ManageUsersUI />;
+export default function ManagerUsers() {
+  return <ManagerUsersUI />;
 }
